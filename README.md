@@ -79,7 +79,7 @@ CARE
     └── pretrain/
 ```
 
-**Note on corpus**: Following [xRAG](https://github.com/Hannibal046/xRAG), we use the **Wikipedia dump from December 2021** as the knowledge source.
+**Note on corpus**: Following [xRAG](https://github.com/Hannibal046/xRAG), we use the **Wikipedia dump from December 2021**(https://github.com/facebookresearch/atlas?tab=readme-ov-file#models) as the knowledge source.
 * Pretraining corpus: 2 million samples randomly selected.
 
 ---
