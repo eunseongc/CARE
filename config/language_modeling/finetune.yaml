@@ -1,0 +1,34 @@
+## data
+train_file: null
+ret_embedding_path: null # null becomes None in python
+max_seq_length: 1024
+retrieval_context_length: 180
+preprocessing_num_workers: 32
+overwrite_cache: false
+## model
+chat_format: icae
+
+## train
+task_type: finetune
+use_rag_tuning: true
+icae_mem_size: 16
+workdir: .
+lr_scheduler_type: linear
+warmup_ratio: 0.03
+weight_decay: 0.0
+use_flash_attn: true
+alpha_nll: 1.0
+kl_temperature: 1.0
+clip_grad_norm: -1.0
+seed: 980406
+update_projector_only: true
+same_nll_kl: true
+select_criteria: closed_book_correct
+ctx_select: hn
+ctx_teacher: adaptive
+ctx_student: gt
+
+## logging
+logging_steps: 1
+project_name: care
+checkpointing_steps: 300

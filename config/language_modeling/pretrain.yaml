@@ -1,0 +1,32 @@
+## data
+ret_embedding_path: null
+train_file: data_care/pretrain/train.jsonl
+dev_file: data_care/pretrain/dev.jsonl
+max_seq_length: 336
+retrieval_context_length: 180
+preprocessing_num_workers: 16
+overwrite_cache: false
+max_train_samples: 2000000
+
+## model
+model_name_or_path: null
+chat_format: icae
+
+## train
+task_type: pretrain
+workdir: .
+lr_scheduler_type: linear
+warmup_ratio: 0.03
+weight_decay: 0.0
+num_train_epochs: 1
+use_flash_attn: true
+alpha_nll: 1.0
+alpha_kl: null
+clip_grad_norm: -1.00
+seed: 980406
+update_projector_only: true
+
+## logging
+logging_steps: 1
+project_name: care_pt
+checkpointing_steps: 1000

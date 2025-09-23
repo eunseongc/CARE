@@ -1,0 +1,12 @@
+transformers==4.51.0
+accelerate==0.27.2
+datasets==2.17.1
+flash-attn==2.7.4.post1
+wandb==0.21.3
+peft==0.14.0
+tiktoken==0.9.0
+protobuf==5.29.1
+sentencepiece==0.2.0
+numpy==1.26.4
+rouge==1.0.1
+huggingface_hub==0.34.4
