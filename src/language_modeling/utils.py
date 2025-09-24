@@ -500,7 +500,7 @@ def collator(
 
 
 @torch.no_grad()
-def validate_during_pretrain(model, dataloader, device, vocab_size, accelerator=None):
+def validate_during_pretrain(model, dataloader, vocab_size, accelerator):
     model.eval()
     total_loss = []
 
@@ -513,19 +513,20 @@ def validate_during_pretrain(model, dataloader, device, vocab_size, accelerator=
                     )
         else:
             memory_slots = model.icae_forward(
-                        input_ids = batch['retriever_input_ids'].to(device),
-                        attention_mask = batch['retriever_attention_mask'].to(device),
+                        input_ids = batch['retriever_input_ids'].to(accelerator.device),
+                        attention_mask = batch['retriever_attention_mask'].to(accelerator.device),
                     )
 
-            retrieval_kwargs['retrieval_embeds'] = memory_slots
+        retrieval_kwargs['retrieval_embeds'] = memory_slots
+            
         outputs = model(
-            input_ids = batch['xrag_input_ids'].to(device),
-            attention_mask = batch['xrag_attention_mask'].to(device),
+            input_ids = batch['xrag_input_ids'].to(accelerator.device),
+            attention_mask = batch['xrag_attention_mask'].to(accelerator.device),
             **retrieval_kwargs,
         )
 
         nll_loss = get_nll_loss(
-            labels = batch['xrag_labels'],
+            labels = batch['xrag_labels'].to(accelerator.device),
             logits = outputs.logits,
             vocab_size = vocab_size,
         )
@@ -542,7 +543,7 @@ def validate_during_pretrain(model, dataloader, device, vocab_size, accelerator=
 
 
 @torch.no_grad()
-def validate_during_finetune(model, dataloader, accelerator ,retriever, tokenizer, output_dir, id2indices=None, id2embed_for_retriever=None, ret_embeddings=None, retriever_hidden_size=4096):
+def validate_during_finetune(model, dataloader, accelerator, tokenizer, output_dir):
     model.eval()
     local_results = []
     for batch in tqdm(dataloader, desc="> validating", dynamic_ncols=True):

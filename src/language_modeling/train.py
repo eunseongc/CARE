@@ -593,11 +593,11 @@ def main():
 
                         if dev_dataloader is not None:
                             if args.task_type == 'pretrain':
-                                ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever)
+                                ppl = validate_during_pretrain(model, dev_dataloader, vocab_size, accelerator)
                                 print(f"> {completed_steps} steps, dev ppl: {ppl}")
                                 accelerator.log({"dev_ppl":ppl},step=completed_steps)
                             else: 
-                                score = validate_during_finetune(model, dev_dataloader, accelerator, retriever, tokenizer, output_dir)
+                                score = validate_during_finetune(model, dev_dataloader, accelerator, tokenizer, output_dir)
                                 print(f"> {completed_steps} steps, EM score: {score}")
                                 accelerator.log({"Span-EM":score},step=completed_steps)
 
@@ -612,11 +612,11 @@ def main():
 
     if dev_dataloader is not None:
         if args.task_type == 'pretrain':
-            ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever)
+            ppl = validate_during_pretrain(model, dev_dataloader, vocab_size, accelerator)
             print(f"> {completed_steps} steps, dev ppl: {ppl}")
             accelerator.log({"dev_ppl":ppl},step=completed_steps)
         else: 
-            score = validate_during_finetune(model, dev_dataloader, accelerator, retriever,tokenizer, output_dir)
+            score = validate_during_finetune(model, dev_dataloader, accelerator, tokenizer, output_dir)
             print(f"> {completed_steps} steps, EM score: {score}")
             accelerator.log({"Span-EM":score},step=completed_steps)
     accelerator.end_training()
