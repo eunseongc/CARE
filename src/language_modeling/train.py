@@ -593,7 +593,7 @@ def main():
 
                         if dev_dataloader is not None:
                             if args.task_type == 'pretrain':
-                                ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever, id2indices, id2embed_for_retriever, ret_embeddings)
+                                ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever)
                                 print(f"> {completed_steps} steps, dev ppl: {ppl}")
                                 accelerator.log({"dev_ppl":ppl},step=completed_steps)
                             else: 
@@ -612,7 +612,7 @@ def main():
 
     if dev_dataloader is not None:
         if args.task_type == 'pretrain':
-            ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever, id2indices, id2embed_for_retriever, ret_embeddings)
+            ppl = validate_during_pretrain(model, dev_dataloader, accelerator, vocab_size, retriever)
             print(f"> {completed_steps} steps, dev ppl: {ppl}")
             accelerator.log({"dev_ppl":ppl},step=completed_steps)
         else: 

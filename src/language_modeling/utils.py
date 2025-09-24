@@ -500,51 +500,24 @@ def collator(
 
 
 @torch.no_grad()
-def validate_during_pretrain(model, dataloader, device, vocab_size, retriever, accelerator=None, id2indices=None, id2embed_for_retriever=None, ret_embeddings=None, retriever_hidden_size=4096):
+def validate_during_pretrain(model, dataloader, device, vocab_size, accelerator=None):
     model.eval()
     total_loss = []
 
-    if accelerator is not None:
-        model_class = model.module.__class__.__name__
-    else:
-        model_class = model.__class__.__name__
-
     for batch in tqdm(dataloader, desc="> validating", dynamic_ncols=True):
         retrieval_kwargs = {}
-        if model_class == "ICAE":
-            if accelerator is not None:
-                memory_slots = model.module.icae_forward(
-                            input_ids = batch['retriever_input_ids'],
-                            attention_mask = batch['retriever_attention_mask'],
-                        )
-            else:
-                memory_slots = model.icae_forward(
-                            input_ids = batch['retriever_input_ids'].to(device),
-                            attention_mask = batch['retriever_attention_mask'].to(device),
-                        )
+        if accelerator is not None:
+            memory_slots = model.module.icae_forward(
+                        input_ids = batch['retriever_input_ids'],
+                        attention_mask = batch['retriever_attention_mask'],
+                    )
+        else:
+            memory_slots = model.icae_forward(
+                        input_ids = batch['retriever_input_ids'].to(device),
+                        attention_mask = batch['retriever_attention_mask'].to(device),
+                    )
 
             retrieval_kwargs['retrieval_embeds'] = memory_slots
-
-        elif id2indices is not None: ## Using codebook embeddings by index / multiple 처리할 수 있을지 모름. 아마 못할듯. 수정 필요.
-            temp = []
-            for idx in batch['ids']:
-                temp.append(id2indices[idx])
-            retrieval_kwargs['retrieval_embeds'] = torch.cat(temp, dim=0).to(device)
-            if ret_embeddings is not None:
-                retrieval_kwargs['hybrid_ret_embeds'] = torch.stack([ret_embeddings[id] for id in batch['ids']]).to(device)
-
-        elif id2embed_for_retriever is not None:
-            retrieval_kwargs['retrieval_embeds'] = torch.cat([id2embed_for_retriever[id].reshape(-1, retriever_hidden_size) for id in batch['ids']], dim=0).to(device)
-            if ret_embeddings is not None:
-                retrieval_kwargs['hybrid_ret_embeds'] = torch.stack([ret_embeddings[id] for id in batch['ids']]).to(device)
-        else:
-            assert retriever is not None, "retriever is not loaded"
-            retrieval_kwargs['retrieval_embeds'] = get_retrieval_embeds(
-                model = retriever,
-                input_ids = batch['retriever_input_ids'],
-                attention_mask = batch['retriever_attention_mask'],
-            )
-
         outputs = model(
             input_ids = batch['xrag_input_ids'].to(device),
             attention_mask = batch['xrag_attention_mask'].to(device),
