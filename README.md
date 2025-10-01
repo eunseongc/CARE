@@ -44,6 +44,8 @@ Inside the container:
 git clone https://github.com/eunseongc/CARE
 cd CARE
 pip install -r requirements.txt
+# Login to Hugging Face
+huggingface-cli login
 ```
 
 ---

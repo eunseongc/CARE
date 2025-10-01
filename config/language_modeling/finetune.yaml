@@ -31,4 +31,4 @@ ctx_student: gt
 ## logging
 logging_steps: 1
 project_name: care
-checkpointing_steps: 300
+checkpointing_steps: 10
