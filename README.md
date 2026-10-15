@@ -2,7 +2,7 @@
 
 This repository contains the official implementation for our EMNLP 2025 paper:
 
-> **Conflict-Aware Soft Prompting for Retrieval-Augmented Generation**  
+> **[Conflict-Aware Soft Prompting for Retrieval-Augmented Generation](https://aclanthology.org/2025.emnlp-main.1371/)**   
 > Eunseong Choi, June Park, Hyeri Lee, and Jongwuk Lee  
 > *EMNLP 2025*
 
